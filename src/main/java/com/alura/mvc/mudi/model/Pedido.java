@@ -73,6 +73,10 @@ public class Pedido {
 	public void setUrlImagen(String urlImagen) {
 		this.urlImagen = urlImagen;
 	}
-	
-	
+	public User getUser() {
+		return user;
+	}
+	public void setUser(User user) {
+		this.user = user;
+	}
 }
