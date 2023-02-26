@@ -3,25 +3,10 @@
 	<body>
 		<div th:replace="~{base :: logo}"></div>
 		<div class="container">
-			<div th:replace="~{base :: titulo('Mis Pedidos', 'mb-0')}"></div>
-			<nav class="navbar navbar-expand bg-light mb-3">
-				<div class="container-fluid d-flex justify-content-between">
-					<div class="navbar-nav">
-						<a th:classappend="${status} == null ? 'active'" class="nav-link" href="/home">Todos</a>
-						<a th:classappend="${status} == 'esperando' ? 'active'" class="nav-link" href="/home/esperando">Esperando</a>
-						<a th:classappend="${status} == 'aprobado' ? 'active'" class="nav-link" href="/home/aprobado">Aprobados</a>
-						<a th:classappend="${status} == 'entregado' ? 'active'" class="nav-link" href="/home/entregado">Entregados</a>
-					</div>
-					<a href="/pedido/formulario"><button class="btn btn-outline-secondary">Nuevo</button></a>
-				</div>
-			</nav>
+			<div th:replace="~{base :: titulo('Últimos pedidos', 'mb-3')}"></div>
 			<div class="card mb-3" th:each="pedido : ${pedidos}">
 				
-				<th:block th:switch="${pedido.status.name()}">
-					<div th:case="'ESPERANDO'" class="card-header text-bg-warning" th:text="${pedido.nombreDelProducto}">Nombre del producto</div>
-					<div th:case="'APROBADO'" class="card-header text-bg-success" th:text="${pedido.nombreDelProducto}">Nombre del producto</div>
-					<div th:case="'ENTREGADO'" class="card-header text-bg-dark" th:text="${pedido.nombreDelProducto}">Nombre del producto</div>
-				</th:block>
+				<div class="card-header text-bg-dark" th:text="${pedido.nombreDelProducto}">Nombre del producto</div>
 				
 				<div class="card-body">
 					<div class="row">
