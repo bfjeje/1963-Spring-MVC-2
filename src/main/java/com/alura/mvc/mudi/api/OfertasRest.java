@@ -4,6 +4,7 @@ import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -20,7 +21,7 @@ public class OfertasRest {
 	private PedidoRepository pedidoRepository;
 	
 	@PostMapping
-	private Oferta creaOferta(RequestNuevaOferta request) {
+	private Oferta creaOferta(@RequestBody RequestNuevaOferta request) {
 		
 		Optional<Pedido> pedidoBuscado = pedidoRepository.findById(request.getPedidoId());
 		if(!pedidoBuscado.isPresent()) {

@@ -25,7 +25,8 @@
 								<label class="form-label">Comentario</label>
 								<textarea class="form-control" v-model="pedido.comentario"></textarea>
 							</div>
-							<button v-on:click="enviarOferta(pedido)" class="btn btn-primary mt-2">Enviar Oferta</button>
+							<button v-if="pedido.ofertaEnviada" class="btn btn-success mt-2">Oferta Enviada</button>
+							<button v-else v-on:click="enviarOferta(pedido)" class="btn btn-primary mt-2">Enviar Oferta</button>
 						</div>
 						<div class="col-12 col-sm-4">
 							<div>
@@ -49,11 +50,24 @@
 				  mounted () {
 				    axios
 				      .get('http://localhost:8080/api/pedidos/esperando')
-				      .then(response => (this.pedidos = response.data))
+				      .then(response => {
+					    	  response.data.forEach(pedido => pedido.ofertaEnviada = false)
+					    	  this.pedidos = response.data
+				    	  })
 				  },
 				  methods: {
 					  enviarOferta(pedido){
-						  console.log(pedido)
+						  axios
+						      .post('http://localhost:8080/api/ofertas', {
+						    	  pedidoId: pedido.id,
+						    	  valor: pedido.valorNegociado,
+						    	  fechaDeEntrega: pedido.fechaDeEntrega,
+						    	  comentario: pedido.comentario
+						      })
+						      .then(response => pedido.ofertaEnviada = true)
+						      .catch(function (error) {
+						    	  console.log(error);
+						      })
 					  }
 				  }
 				}).mount('#ofertas')
