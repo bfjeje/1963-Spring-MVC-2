@@ -13,6 +13,8 @@ import com.alura.mvc.mudi.model.Oferta;
 import com.alura.mvc.mudi.model.Pedido;
 import com.alura.mvc.mudi.repository.PedidoRepository;
 
+import jakarta.validation.Valid;
+
 @RestController
 @RequestMapping("/api/ofertas")
 public class OfertasRest {
@@ -21,7 +23,7 @@ public class OfertasRest {
 	private PedidoRepository pedidoRepository;
 	
 	@PostMapping
-	private Oferta creaOferta(@RequestBody RequestNuevaOferta request) {
+	private Oferta creaOferta(@Valid @RequestBody RequestNuevaOferta request) {
 		
 		Optional<Pedido> pedidoBuscado = pedidoRepository.findById(request.getPedidoId());
 		if(!pedidoBuscado.isPresent()) {
