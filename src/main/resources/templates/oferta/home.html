@@ -18,8 +18,18 @@
 								<textarea disabled="disabled" class="form-control">{{pedido.descripcion}}</textarea>
 							</div>
 							<div class="row mt-2">
-								<div class="col-md-5">Valor: <input class="form-control" v-model="pedido.valorNegociado"/> </div>
-								<div class="col-md-7">Fecha de entrega: <input class="form-control" v-model="pedido.fechaDeEntrega"/></div>
+								<div class="col-md-5">
+									Valor: <input v-bind:class="{'is-invalid':pedido.errores.valor!==''}" class="form-control" v-model="pedido.valorNegociado"/>
+									<div v-if="pedido.errores.valor" class="invalid-feedback">
+										{{pedido.errores.valor}}
+									</div>
+								</div>
+								<div class="col-md-7">
+									Fecha de entrega: <input v-bind:class="{'is-invalid':pedido.errores.fechaDeEntrega!==''}" class="form-control" v-model="pedido.fechaDeEntrega"/>
+									<div v-if="pedido.errores.fechaDeEntrega" class="invalid-feedback">
+										{{pedido.errores.fechaDeEntrega}}
+									</div>
+								</div>
 							</div>
 							<div class="mt-2">
 								<label class="form-label">Comentario</label>
@@ -51,12 +61,22 @@
 				    axios
 				      .get('http://localhost:8080/api/pedidos/esperando')
 				      .then(response => {
-					    	  response.data.forEach(pedido => pedido.ofertaEnviada = false)
+					    	  response.data.forEach(pedido => {
+					    		  pedido.ofertaEnviada = false
+					    		  pedido.errores = {
+				    				  valor: '',
+				    				  fechaDeEntrega: ''
+					    		  }  
+					    	  })
 					    	  this.pedidos = response.data
 				    	  })
 				  },
 				  methods: {
 					  enviarOferta(pedido){
+						  pedido.errores = {
+		    				  valor: '',
+		    				  fechaDeEntrega: ''
+			    		  }
 						  axios
 						      .post('http://localhost:8080/api/ofertas', {
 						    	  pedidoId: pedido.id,
@@ -66,7 +86,9 @@
 						      })
 						      .then(response => pedido.ofertaEnviada = true)
 						      .catch(function (error) {
-						    	  console.log(error);
+						    	  error.response.data.errors.forEach(errorJson => {
+						    		  pedido.errores[errorJson.field] = errorJson.defaultMessage;
+						    	  })
 						      })
 					  }
 				  }
